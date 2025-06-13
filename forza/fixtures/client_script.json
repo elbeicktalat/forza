@@ -1,0 +1,35 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Terms Template",
+  "enabled": 1,
+  "modified": "2025-04-06 14:20:24.101019",
+  "module": "Forza",
+  "name": "Payment Terms Template",
+  "script": "frappe.ui.form.on('Payment Terms Template', 'validate', (frm) => {\n    if(!frm.doc.terms.template_name.startsWith('Rat')) return;\n\n    frm.doc.terms.forEach((term) => {\n        term.invoice_portion = 100 / frm.doc.terms.length;\n    });\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Order",
+  "enabled": 1,
+  "modified": "2025-04-22 15:05:02.363103",
+  "module": "Forza",
+  "name": "Sales Order Manufacturing Helper",
+  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t    frm.trigger(\"populate_manufacturing_html\");\t\n\t},\n\tasync populate_manufacturing_html(frm) {\n\t    // Generate HTML\n        const html = `<div>\n            <p>Ciao Talat El Beick</p>\n        </div>`;\n\n\t    frm.set_df_property(\"manufacturing_html\", \"options\", html);\n\t},\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Address",
+  "enabled": 1,
+  "modified": "2025-04-10 01:46:13.453563",
+  "module": "Forza",
+  "name": "Address",
+  "script": "frappe.ui.form.on('Address', 'validate', (frm) => {\n    if(frm.doc.address_title == null) {\n        frm.doc.address_title = `${frm.doc.city}, ${frm.doc.address_line1}`;\n    }\n});",
+  "view": "Form"
+ }
+]

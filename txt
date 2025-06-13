@@ -1,0 +1,91 @@
+### App Versions
+```
+{
+	"crm": "2.0.0-dev",
+	"doppio": "0.0.1",
+	"erpnext": "15.50.0",
+	"forza": "0.0.1",
+	"frappe": "15.54.1",
+	"frappe_whatsapp": "1.0.7",
+	"gameplan": "0.0.1",
+	"hrms": "15.39.0",
+	"insights": "3.0.0"
+}
+```
+### Route
+```
+Form/Sales Order/new-sales-order-gthvqfuyyf
+```
+### Traceback
+```
+Traceback (most recent call last):
+  File "apps/frappe/frappe/app.py", line 114, in application
+    response = frappe.api.handle(request)
+  File "apps/frappe/frappe/api/__init__.py", line 49, in handle
+    data = endpoint(**arguments)
+  File "apps/frappe/frappe/api/v1.py", line 36, in handle_rpc_call
+    return frappe.handler.handle()
+  File "apps/frappe/frappe/handler.py", line 50, in handle
+    data = execute_cmd(cmd)
+  File "apps/frappe/frappe/handler.py", line 86, in execute_cmd
+    return frappe.call(method, **frappe.form_dict)
+  File "apps/frappe/frappe/__init__.py", line 1726, in call
+    return fn(*args, **newargs)
+  File "apps/frappe/frappe/utils/typing_validations.py", line 31, in wrapper
+    return func(*args, **kwargs)
+  File "apps/frappe/frappe/desk/form/save.py", line 39, in savedocs
+    doc.save()
+  File "apps/frappe/frappe/model/document.py", line 342, in save
+    return self._save(*args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 364, in _save
+    return self.insert()
+  File "apps/frappe/frappe/model/document.py", line 289, in insert
+    self.run_method("before_insert")
+  File "apps/frappe/frappe/model/document.py", line 974, in run_method
+    out = Document.hook(fn)(self, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1334, in composer
+    return composed(self, method, *args, **kwargs)
+  File "apps/frappe/frappe/model/document.py", line 1318, in runner
+    add_to_return_value(self, f(self, method, *args, **kwargs))
+  File "apps/forza/forza/utils.py", line 24, in before_insert_sales_order
+    employee = frappe.get_doc('Employee', sales_team[0][0])
+IndexError: tuple index out of range
+
+```
+### Request Data
+```
+{
+	"type": "POST",
+	"args": {
+		"doc": "{\"docstatus\":0,\"doctype\":\"Sales Order\",\"name\":\"new-sales-order-gthvqfuyyf\",\"__islocal\":1,\"__unsaved\":1,\"owner\":\"Administrator\",\"title\":\"{customer_name}\",\"naming_series\":\"SO.YY.-\",\"order_type\":\"Sales\",\"transaction_date\":\"2025-04-16\",\"company\":\"EMK\",\"skip_delivery_note\":0,\"currency\":\"SAR\",\"selling_price_list\":\"Standard Selling\",\"price_list_currency\":\"SAR\",\"ignore_pricing_rule\":0,\"reserve_stock\":0,\"items\":[{\"docstatus\":0,\"doctype\":\"Sales Order Item\",\"name\":\"new-sales-order-item-cnociarpye\",\"__islocal\":1,\"__unsaved\":1,\"owner\":\"Administrator\",\"ensure_delivery_based_on_produced_serial_no\":0,\"is_stock_item\":1,\"reserve_stock\":1,\"stock_reserved_qty\":0,\"margin_type\":\"\",\"is_free_item\":0,\"grant_commission\":1,\"delivered_by_supplier\":0,\"against_blanket_order\":null,\"page_break\":0,\"parent\":\"new-sales-order-gthvqfuyyf\",\"parentfield\":\"items\",\"parenttype\":\"Sales Order\",\"idx\":1,\"qty\":1,\"conversion_factor\":1,\"stock_qty\":1,\"price_list_rate\":1500,\"base_price_list_rate\":1500,\"margin_rate_or_amount\":0,\"rate_with_margin\":0,\"discount_amount\":0,\"base_rate_with_margin\":0,\"rate\":1500,\"amount\":1500,\"base_rate\":1500,\"base_amount\":1500,\"stock_uom_rate\":1500,\"net_rate\":1500,\"net_amount\":1500,\"base_net_rate\":1500,\"base_net_amount\":1500,\"billed_amt\":0,\"valuation_rate\":0,\"gross_profit\":0,\"weight_per_unit\":0,\"total_weight\":0,\"blanket_order_rate\":0,\"actual_qty\":0,\"company_total_stock\":0,\"projected_qty\":0,\"ordered_qty\":0,\"planned_qty\":0,\"production_plan_qty\":0,\"work_order_qty\":0,\"delivered_qty\":0,\"produced_qty\":0,\"returned_qty\":0,\"picked_qty\":0,\"delivery_date\":\"2025-04-16\",\"item_code\":\"#300101-00-0-BEIGE-B06\",\"weight_uom\":null,\"barcode\":null,\"pricing_rules\":\"\",\"item_name\":\"#300101-00-0-BEIGE-B06\",\"description\":\"#300101-00-0-BEIGE-B06\",\"image\":\"\",\"warehouse\":null,\"income_account\":\"Sales - EMK\",\"expense_account\":\"Cost of Goods Sold - EMK\",\"discount_account\":null,\"provisional_expense_account\":null,\"cost_center\":\"Main - EMK\",\"has_serial_no\":1,\"has_batch_no\":1,\"batch_no\":null,\"uom\":\"Box\",\"stock_uom\":\"Box\",\"min_order_qty\":\"\",\"discount_percentage\":0,\"update_stock\":0,\"is_fixed_asset\":0,\"last_purchase_rate\":0,\"transaction_date\":\"2025-04-16\",\"bom_no\":null,\"item_group\":\"30 MOCSSINO\",\"brand\":null,\"manufacturer\":null,\"manufacturer_part_no\":null,\"item_tax_rate\":\"{}\",\"customer_item_code\":null,\"has_margin\":false,\"free_item_data\":[],\"child_docname\":\"new-sales-order-item-cnociarpye\"}],\"taxes\":[],\"disable_rounded_total\":0,\"apply_discount_on\":\"Grand Total\",\"packed_items\":[],\"pricing_rules\":[],\"payment_schedule\":[],\"status\":\"Draft\",\"delivery_status\":\"Not Delivered\",\"billing_status\":\"Not Billed\",\"sales_team\":[],\"group_same_items\":0,\"is_internal_customer\":0,\"party_account_currency\":\"SAR\",\"advance_paid\":0,\"conversion_rate\":1,\"plc_conversion_rate\":1,\"company_address\":null,\"company_address_display\":null,\"base_net_total\":1500,\"net_total\":1500,\"base_total\":1500,\"total\":1500,\"total_qty\":1,\"rounding_adjustment\":0,\"grand_total\":1500,\"base_grand_total\":1500,\"total_taxes_and_charges\":0,\"base_total_taxes_and_charges\":0,\"base_rounding_adjustment\":0,\"rounded_total\":1500,\"base_rounded_total\":1500,\"in_words\":\"\",\"base_in_words\":\"\",\"base_discount_amount\":0,\"amount_eligible_for_commission\":1500,\"total_commission\":null,\"tax_id\":null,\"customer_name\":\"العويني\",\"represents_company\":null,\"customer\":\"العويني\",\"customer_address\":\"الرياض, شارع الثميري-Billing\",\"address_display\":\"شارع الثميري<br>\\nالرياض<br>\\nSaudi Arabia<br>\\n<br>\\n\",\"shipping_address_name\":null,\"shipping_address\":null,\"tax_category\":\"\",\"contact_person\":null,\"contact_display\":null,\"contact_email\":null,\"contact_mobile\":null,\"contact_phone\":null,\"customer_group\":null,\"territory\":null,\"language\":\"en\",\"payment_terms_template\":null,\"delivery_date\":\"2025-04-16\",\"total_net_weight\":0}",
+		"action": "Save"
+	},
+	"btn": {
+		"jQuery370060274488015860691": {
+			"events": {
+				"click": [
+					{
+						"type": "click",
+						"origType": "click",
+						"guid": 4999,
+						"namespace": ""
+					}
+				]
+			}
+		}
+	},
+	"freeze": true,
+	"headers": {},
+	"error_handlers": {},
+	"url": "/api/method/frappe.desk.form.save.savedocs",
+	"request_id": null
+}
+```
+### Response Data
+```
+{
+	"exception": "IndexError: tuple index out of range",
+	"exc_type": "IndexError",
+	"_exc_source": "forza (app)"
+}
+```
