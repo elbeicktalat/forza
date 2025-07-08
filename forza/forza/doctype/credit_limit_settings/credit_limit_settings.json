@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-03 00:41:46.357977",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "weeks",
+  "section_break_xboa",
+  "values"
+ ],
+ "fields": [
+  {
+   "default": "13",
+   "description": "Return back by this weeks, The higher this number is, the more payment average are close to reality. ",
+   "fieldname": "weeks",
+   "fieldtype": "Int",
+   "label": "Weeks"
+  },
+  {
+   "fieldname": "section_break_xboa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "values",
+   "fieldtype": "Table",
+   "label": "Values",
+   "options": "Credit Limit Settings Table"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-07-03 00:49:07.652479",
+ "modified_by": "Administrator",
+ "module": "Forza",
+ "name": "Credit Limit Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -8,7 +8,12 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ['erpnext']
+
+fixtures = [
+	{"doctype": "Custom Field", "filters": [["module", "=", "Forza"]]},
+	{"doctype": "Client Script", "filters": [["module", "=", "Forza"]]},
+]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -145,8 +150,29 @@ app_license = "mit"
 # 	}
 # }
 
+doc_events = {
+	"Sales Order": {
+		"validate": "forza.utils.validate_sales_order",
+		'before_insert': 'forza.utils.before_insert_sales_order',
+		'on_submit': 'forza.utils.on_submit_sales_order',
+	},
+	"Sales Invoice": {
+		"validate": "forza.utils.validate_sales_invoice",
+		'before_insert': 'forza.utils.before_insert_sales_invoice',
+	},
+	"Delivery Note": {
+		'before_insert': 'forza.utils.before_insert_delivery_note',
+	},
+	"Payment Entry": {
+		'on_submit': 'forza.utils.on_submit_payment_entry',
+	}
+}
+
+
 # Scheduled Tasks
 # ---------------
+
+# scheduler_events = {}
 
 # scheduler_events = {
 # 	"all": [

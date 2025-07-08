@@ -1,0 +1,68 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Credit Limit Settings",
+  "enabled": 1,
+  "modified": "2025-07-03 00:50:58.179337",
+  "module": "Forza",
+  "name": "Credit Limit Settings",
+  "script": "frappe.ui.form.on('Credit Limit Settings Table', 'rate_qty', (frm, cdt, cdn) => {\n    var doc = locals[cdt][cdn];\n    frappe.model.set_value(cdt, cdn, 'max_credit', (doc.weekly_payment * doc.rate_qty));\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Payment Terms Template",
+  "enabled": 1,
+  "modified": "2025-04-06 14:20:24.101019",
+  "module": "Forza",
+  "name": "Payment Terms Template",
+  "script": "frappe.ui.form.on('Payment Terms Template', 'validate', (frm) => {\n    if(!frm.doc.terms.template_name.startsWith('Rat')) return;\n\n    frm.doc.terms.forEach((term) => {\n        term.invoice_portion = 100 / frm.doc.terms.length;\n    });\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Order",
+  "enabled": 1,
+  "modified": "2025-04-22 15:05:02.363103",
+  "module": "Forza",
+  "name": "Sales Order Manufacturing Helper",
+  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t    frm.trigger(\"populate_manufacturing_html\");\t\n\t},\n\tasync populate_manufacturing_html(frm) {\n\t    // Generate HTML\n        const html = `<div>\n            <p>Ciao Talat El Beick</p>\n        </div>`;\n\n\t    frm.set_df_property(\"manufacturing_html\", \"options\", html);\n\t},\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Address",
+  "enabled": 1,
+  "modified": "2025-04-10 01:46:13.453563",
+  "module": "Forza",
+  "name": "Address",
+  "script": "frappe.ui.form.on('Address', 'validate', (frm) => {\n    if(frm.doc.address_title == null) {\n        frm.doc.address_title = `${frm.doc.city}, ${frm.doc.address_line1}`;\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Rate Settings",
+  "enabled": 1,
+  "modified": "2025-07-02 02:56:37.224918",
+  "module": "Forza",
+  "name": "Rate Settings Table",
+  "script": "frappe.ui.form.on('Rate Settings Table', 'rate_qty', async (frm, cdt, cdn) => {\n    // const item_master = await frappe.db.get_doc('Item', frm.doc.item);\n    // frm.doc.pairs\n    \n    var doc = locals[cdt][cdn];\n    frappe.model.set_value(cdt, cdn, 'max_credit', (doc.weekly_payment * doc.rate_qty));\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Item",
+  "enabled": 1,
+  "modified": "2025-07-02 15:55:55.950311",
+  "module": "Forza",
+  "name": "Create Sized Item",
+  "script": "frappe.ui.form.on('Item', {\n    refresh: function(frm) {\n\t\tfrm.add_custom_button(__(\"Sized Variants\"), function () {\n\t\t    show_sized_variants_dialog(frm);\n\t\t},__(\"Create\"));\n\t},\n});\n\nfunction show_sized_variants_dialog (frm) {\n\t\tvar me = this;\n\n\t\tlet promises = [];\n\t\tlet attr_val_fields = {};\n\n\t\tfunction make_fields_from_attribute_values(attr_dict) {\n\t\t\tlet fields = [];\n\t\t\tlet att_key = frm.doc.attributes.map((idx) => idx.attribute).filter(e => e != 'Size');\n\t\t\tconsole.log(att_key);\n\t\t\tatt_key.forEach((name, i) => {\n\t\t\t\tif (i % 3 === 0) {\n\t\t\t\t\tfields.push({ fieldtype: \"Section Break\" });\n\t\t\t\t}\n\t\t\t\tfields.push({ fieldtype: \"Column Break\", label: name });\n\t\t\t\tfields.push({\n\t\t\t\t\tfieldtype: \"Data\",\n\t\t\t\t\tplaceholder: \"Search\",\n\t\t\t\t\tfieldname: `search_${frappe.scrub(name)}`,\n\t\t\t\t\tonchange: function (e) {\n\t\t\t\t\t\tlet value = e.target.value;\n\t\t\t\t\t\tlet result = attr_dict[name].filter((attr_value) =>\n\t\t\t\t\t\t\tattr_value.toString().toLowerCase().includes(value.toLowerCase())\n\t\t\t\t\t\t);\n\t\t\t\t\t\tattr_dict[name].forEach((attr_value) => {\n\t\t\t\t\t\t\tif (result.includes(attr_value)) {\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.set_df_property(attr_value, \"hidden\", 0);\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.set_df_property(attr_value, \"hidden\", 1);\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t});\n\t\t\t\t\t},\n\t\t\t\t});\n\t\t\t\tattr_dict[name].forEach((value) => {\n\t\t\t\t\tfields.push({\n\t\t\t\t\t\tfieldtype: \"Check\",\n\t\t\t\t\t\tlabel: value,\n\t\t\t\t\t\tfieldname: value,\n\t\t\t\t\t\tdefault: 0,\n\t\t\t\t\t\tonchange: function () {\n\t\t\t\t\t\t\tlet selected_attributes = get_selected_attributes();\n\t\t\t\t\t\t\tlet lengths = [];\n\t\t\t\t\t\t\tObject.keys(selected_attributes).map((key) => {\n\t\t\t\t\t\t\t\tlengths.push(selected_attributes[key].length);\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\tif (lengths.includes(0)) {\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.get_primary_btn().html(__(\"Create Variants\"));\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.disable_primary_action();\n\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\tlet no_of_combinations = lengths.reduce((a, b) => a * b, 1);\n\t\t\t\t\t\t\t\tlet msg;\n\t\t\t\t\t\t\t\tif (no_of_combinations === 1) {\n\t\t\t\t\t\t\t\t\tmsg = __(\"Make {0} Variant\", [no_of_combinations]);\n\t\t\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\t\t\tmsg = __(\"Make {0} Variants\", [no_of_combinations]);\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.get_primary_btn().html(msg);\n\t\t\t\t\t\t\t\tme.multiple_variant_dialog.enable_primary_action();\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t});\n\t\t\t\t});\n\t\t\t});\n\t\t\treturn fields;\n\t\t}\n\n\t\tfunction make_and_show_dialog(fields) {\n\t\t\tme.multiple_variant_dialog = new frappe.ui.Dialog({\n\t\t\t\ttitle: __(\"Select Attribute Values\"),\n\t\t\t\tfields: [\n\t\t\t\t\tfrm.doc.image\n\t\t\t\t\t\t? {\n\t\t\t\t\t\t\t\tfieldtype: \"Check\",\n\t\t\t\t\t\t\t\tlabel: __(\"Create a variant with the template image.\"),\n\t\t\t\t\t\t\t\tfieldname: \"use_template_image\",\n\t\t\t\t\t\t\t\tdefault: 0,\n\t\t\t\t\t\t  }\n\t\t\t\t\t\t: null,\n\t\t\t\t\t{\n\t\t\t\t\t\tfieldtype: \"HTML\",\n\t\t\t\t\t\tfieldname: \"help\",\n\t\t\t\t\t\toptions: `<label class=\"control-label\">\n\t\t\t\t\t\t\t${__(\"Select at least one value from each of the attributes.\")}\n\t\t\t\t\t\t</label>`,\n\t\t\t\t\t},\n\t\t\t\t]\n\t\t\t\t\t.concat(fields)\n\t\t\t\t\t.filter(Boolean),\n\t\t\t});\n\n\t\t\tme.multiple_variant_dialog.set_primary_action(__(\"Create Variants\"), () => {\n\t\t\t\tlet selected_attributes = get_selected_attributes();\n\t\t\t\tlet use_template_image = me.multiple_variant_dialog.get_value(\"use_template_image\");\n\n\t\t\t\tme.multiple_variant_dialog.hide();\n\t\t\t\tfrappe.call({\n\t\t\t\t\tmethod: \"erpnext.controllers.item_variant.enqueue_multiple_variant_creation\",\n\t\t\t\t\targs: {\n\t\t\t\t\t\titem: frm.doc.name,\n\t\t\t\t\t\targs: selected_attributes,\n\t\t\t\t\t\tuse_template_image: use_template_image,\n\t\t\t\t\t},\n\t\t\t\t\tcallback: function (r) {\n\t\t\t\t\t\tif (r.message === \"queued\") {\n\t\t\t\t\t\t\tfrappe.show_alert({\n\t\t\t\t\t\t\t\tmessage: __(\"Variant creation has been queued.\"),\n\t\t\t\t\t\t\t\tindicator: \"orange\",\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tfrappe.show_alert({\n\t\t\t\t\t\t\t\tmessage: __(\"{0} variants created.\", [r.message]),\n\t\t\t\t\t\t\t\tindicator: \"green\",\n\t\t\t\t\t\t\t});\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t}).then(_ => {\n\t\t\t\t   // generate imballo item\n\t\t\t\t   \n                    imballo_attributes = [];\n    \t\t\t\tfrm.doc.attributes.forEach(e => {\n    \t\t\t\t    imballo_attributes.push(e.attribute);\n    \t\t\t\t});\n    \t\t\t\timballo_attributes.push('Imballo');\n    \n                    console.log(imballo_attributes)\n    \n    \t\t\t\tfrappe.db.insert({\n    \t\t\t\t    doctype: 'Item',\n    \t\t\t\t    item_code: `#${frm.doc.item_code}`,\n    \t\t\t\t    item_group: frm.doc.item_group,\n    \t\t\t\t    stock_uom: 'Box',\n    \t\t\t\t    has_variants: 1,\n    \t\t\t\t    attributes: [...frm.doc.attributes.filter(e => e.attribute != 'Size'), {attribute: 'Imballo'}],\n    \t\t\t\t}).then(doc => {\n    \t\t\t\t    frappe.show_alert({\n    \t\t\t\t\t\tmessage: doc.item_code + __(\" has been created.\"),\n    \t\t\t\t\t    indicator: \"green\",\n    \t\t\t\t\t});\n    \t\t\t\t\t\n    \t\t\t\t\tdelete selected_attributes['Size'];\n    \t\t\t\t    selected_attributes['Imballo'] = ['BOX 06', 'BOX 08', 'BOX 10', 'BOX 12'];\n    \t\t\t\t\n        \t\t\t\tfrappe.call({\n        \t\t\t\t\tmethod: \"erpnext.controllers.item_variant.enqueue_multiple_variant_creation\",\n        \t\t\t\t\targs: {\n        \t\t\t\t\t\titem: `#${frm.doc.name}`,\n        \t\t\t\t\t\targs: selected_attributes,\n        \t\t\t\t\t\tuse_template_image: use_template_image,\n        \t\t\t\t\t},\n        \t\t\t\t\tcallback: function (r) {\n        \t\t\t\t\t\tif (r.message === \"queued\") {\n        \t\t\t\t\t\t\tfrappe.show_alert({\n        \t\t\t\t\t\t\t\tmessage: __(\"Variant creation has been queued.\"),\n        \t\t\t\t\t\t\t\tindicator: \"orange\",\n        \t\t\t\t\t\t\t});\n        \t\t\t\t\t\t} else {\n        \t\t\t\t\t\t\tfrappe.show_alert({\n        \t\t\t\t\t\t\t\tmessage: __(\"{0} variants created.\", [r.message]),\n        \t\t\t\t\t\t\t\tindicator: \"green\",\n        \t\t\t\t\t\t\t});\n        \t\t\t\t\t\t}\n        \t\t\t\t\t},\n        \t\t\t\t});\n    \t\t\t\t});\n\t\t\t\t});\n\n\t\t\t});\n\n\t\t\t$($(me.multiple_variant_dialog.$wrapper.find(\".form-column\")).find(\".frappe-control\")).css(\n\t\t\t\t\"margin-bottom\",\n\t\t\t\t\"0px\"\n\t\t\t);\n\n\t\t\tme.multiple_variant_dialog.disable_primary_action();\n\t\t\tme.multiple_variant_dialog.clear();\n\t\t\tme.multiple_variant_dialog.show();\n\t\t\tme.multiple_variant_dialog.$wrapper\n\t\t\t\t.find(\"div[data-fieldname^='search_']\")\n\t\t\t\t.find(\".clearfix\")\n\t\t\t\t.hide();\n\t\t}\n\n\t\tfunction get_selected_attributes() {\n\t\t\tlet selected_attributes = {};\n\t\t\tme.multiple_variant_dialog.$wrapper.find(\".form-column\").each((i, col) => {\n\t\t\t\tif (i === 0) return;\n\t\t\t\tlet attribute_name = $(col).find(\".column-label\").html().trim();\n\t\t\t\tselected_attributes[attribute_name] = [];\n\t\t\t\tlet checked_opts = $(col).find(\".checkbox input\");\n\t\t\t\tchecked_opts.each((i, opt) => {\n\t\t\t\t\tif ($(opt).is(\":checked\")) {\n\t\t\t\t\t\tselected_attributes[attribute_name].push($(opt).attr(\"data-fieldname\"));\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t});\n\t\t\t\n\t\t\tselected_attributes['Size'] = [];\n\t\t\tfrm.doc.sizes.forEach(e => {\n\t\t\t    selected_attributes['Size'].push(e['size']);\n\t\t\t});\n\n\t\t\treturn selected_attributes;\n\t\t}\n\n\t\tfrm.doc.attributes.forEach(function (d) {\n\t\t\tif (!d.disabled) {\n\t\t\t\tlet p = new Promise((resolve) => {\n\t\t\t\t\tif (!d.numeric_values) {\n\t\t\t\t\t\tfrappe\n\t\t\t\t\t\t\t.call({\n\t\t\t\t\t\t\t\tmethod: \"frappe.client.get_list\",\n\t\t\t\t\t\t\t\targs: {\n\t\t\t\t\t\t\t\t\tdoctype: \"Item Attribute Value\",\n\t\t\t\t\t\t\t\t\tfilters: [[\"parent\", \"=\", d.attribute]],\n\t\t\t\t\t\t\t\t\tfields: [\"attribute_value\"],\n\t\t\t\t\t\t\t\t\tlimit_page_length: 0,\n\t\t\t\t\t\t\t\t\tparent: \"Item Attribute\",\n\t\t\t\t\t\t\t\t\torder_by: \"idx\",\n\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t})\n\t\t\t\t\t\t\t.then((r) => {\n\t\t\t\t\t\t\t\tif (r.message) {\n\t\t\t\t\t\t\t\t\tattr_val_fields[d.attribute] = r.message.map(function (d) {\n\t\t\t\t\t\t\t\t\t\treturn d.attribute_value;\n\t\t\t\t\t\t\t\t\t});\n\t\t\t\t\t\t\t\t\tresolve();\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t});\n\t\t\t\t\t} else {\n\t\t\t\t\t\tlet values = [];\n\t\t\t\t\t\tfor (var i = d.from_range; i <= d.to_range; i = flt(i + d.increment, 6)) {\n\t\t\t\t\t\t\tvalues.push(i);\n\t\t\t\t\t\t}\n\t\t\t\t\t\tattr_val_fields[d.attribute] = values;\n\t\t\t\t\t\tresolve();\n\t\t\t\t\t}\n\t\t\t\t});\n\n\t\t\t\tpromises.push(p);\n\t\t\t}\n\t\t}, this);\n\n\t\tPromise.all(promises).then(() => {\n\t\t\tlet fields = make_fields_from_attribute_values(attr_val_fields);\n\t\t\tmake_and_show_dialog(fields);\n\t\t});\n\t};",
+  "view": "Form"
+ }
+]

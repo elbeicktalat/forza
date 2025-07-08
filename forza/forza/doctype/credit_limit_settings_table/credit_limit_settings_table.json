@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-03 00:39:11.153306",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "weekly_payment",
+  "rate_qty",
+  "max_credit"
+ ],
+ "fields": [
+  {
+   "fieldname": "weekly_payment",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Weekly Payment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Rate Qty",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_credit",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Max Credit",
+   "non_negative": 1,
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-07-03 00:39:11.153306",
+ "modified_by": "Administrator",
+ "module": "Forza",
+ "name": "Credit Limit Settings Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
