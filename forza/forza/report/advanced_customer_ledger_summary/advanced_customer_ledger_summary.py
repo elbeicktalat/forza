@@ -155,15 +155,22 @@ Additional Columns for 'User Permission' based access control
 				"width": 105,
 			},
 			{
-				"label": _("Promised Payment"),
-				"fieldname": "promised_payment",
+				"label": _("~ Payment"),
+				"fieldname": "payment_average",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 105,
 			},
 			{
-				"label": _("~ Payment"),
-				"fieldname": "payment_average",
+				"label": _("Expected Payment"),
+				"fieldname": "expected_payment",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 105,
+			},
+			{
+				"label": _("Promised Payment"),
+				"fieldname": "promised_payment",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 105,
@@ -228,8 +235,9 @@ Additional Columns for 'User Permission' based access control
 						"closing_balance": 0,
 						"credit_limit": 0,
 						"available_credit": 0,
-						"promised_payment": 0,
 						"payment_average": 0,
+						"expected_payment": 0,
+						"promised_payment": 0,
 						"previous_amount": 0,
 					}
 				),
@@ -281,8 +289,9 @@ Additional Columns for 'User Permission' based access control
 					amount for amount in self.party_adjustment_details.get(party, {}).values()
 				)
 				row.paid_amount -= total_party_adjustment
-				row.promised_payment = customer.promised_payment
 				row.payment_average = customer.payment_average
+				row.expected_payment = customer.expected_payment
+				row.promised_payment = customer.promised_payment
 				row.credit_limit = customer.credit_limit
 				row.available_credit = customer.credit_limit - row.closing_balance
 				row.previous_amount = total_previous_amount

@@ -146,8 +146,14 @@ frappe.query_reports["Advanced Customer Ledger Summary"] = {
 			value = "<span style='color:red'>" + value + "</span>";
 		}
 
+		if (column.fieldname === "expected_payment" && data && data.expected_payment > data.payment_average) {
+			value = "<span style='color:red'>" + value + "</span>";
+		} else if (column.fieldname === "expected_payment" && data && data.expected_payment <= data.payment_average) {
+			value = "<span style='color:green'>" + value + "</span>";
+		}
+
 		if (column.fieldname === "promised_payment" && data && data.promised_payment < 500) {
-			value = "<button style='color:red; border:none; background: transparent; padding: 0;'" + "onclick='show_promised_payment_test_dialog(" + data.payment_average + "," + data.closing_balance + ")' >" + value + "</button>";
+			value = "<button style='color:red; border:none; background: transparent; padding: 0;'>" + value + "</button>";
 		} else if (column.fieldname === "promised_payment" && data && data.payment_average >= data.promised_payment && data.payment_average >= 500) {
 			value = "<button style='color:green; border:none; background: transparent; padding: 0;'" + "onclick='show_promised_payment_test_dialog(" + data.payment_average + "," + data.closing_balance + ")' >" + value + "</button>";
 		}

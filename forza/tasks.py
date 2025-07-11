@@ -1,9 +1,7 @@
 import frappe
 
 
-def calculate_customer_credit_limit(customer_name):
-	print(customer_name)
-	credit_limit_settings = frappe.get_doc('Credit Limit Settings')
+def calculate_customer_credit_limit(customer_name, credit_limit_settings):
 	today = frappe.utils.getdate()
 
 	WEEK_COUNT = credit_limit_settings.weeks
@@ -43,7 +41,6 @@ def calculate_customer_credit_limit(customer_name):
 
 	for payment in unique_payment_entries:
 		total_paid_amount = total_paid_amount + payment.paid_amount
-		print(payment)
 
 	# media dei pagamenti in week
 	payment_average = total_paid_amount / (
@@ -66,9 +63,13 @@ def calculate_customer_credit_limit(customer_name):
 	doc.save()
 	frappe.db.commit()
 
-
+@frappe.whitelist()
 def calculate_customers_credit_limit():
-	customers_names = frappe.db.get_list('Customer')
-
-	for customer_name in customers_names:
-		calculate_customer_credit_limit(customer_name)
+	customers = frappe.db.get_list('Customer')
+	credit_limit_settings = frappe.get_doc('Credit Limit Settings')
+	progress = 1
+	frappe.publish_progress(progress, "Clculateing Credit Limit")
+	for customer in customers:
+		calculate_customer_credit_limit(customer.name, credit_limit_settings)
+		progress += 1 * 100 / len(customers)
+		frappe.publish_progress(progress, "Clculateing Credit Limit", description=customer.name)

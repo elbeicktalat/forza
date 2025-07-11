@@ -151,6 +151,9 @@ fixtures = [
 # }
 
 doc_events = {
+	"Customer": {
+		"validate": "forza.utils.validate_customer",
+	},
 	"Sales Order": {
 		"validate": "forza.utils.validate_sales_order",
 		'before_insert': 'forza.utils.before_insert_sales_order',
@@ -159,12 +162,13 @@ doc_events = {
 	"Sales Invoice": {
 		"validate": "forza.utils.validate_sales_invoice",
 		'before_insert': 'forza.utils.before_insert_sales_invoice',
+		'on_submit': 'forza.utils.on_submit_sales_invoice',
 	},
 	"Delivery Note": {
 		'before_insert': 'forza.utils.before_insert_delivery_note',
 	},
 	"Payment Entry": {
-		'on_submit': 'forza.utils.on_submit_payment_entry',
+		'before_submit': 'forza.utils.before_submit_payment_entry',
 	}
 }
 

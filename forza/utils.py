@@ -2,6 +2,11 @@ import frappe
 from frappe import _, msgprint, qb
 
 
+def validate_customer(self, arg):
+	if not self.sales_team:
+		frappe.throw('Sales Team require to have at least one member, please add one then save.')
+
+
 def validate_sales_order(self, arg):
 	balance = frappe.call(
 		"erpnext.accounts.utils.get_balance_on",
@@ -109,9 +114,25 @@ def validate_sales_invoice(self, arg):
 	self.customer_balance = balance
 
 
-def on_submit_payment_entry(self, arg):
-	if self.party_type != 'Customer':
+def on_submit_sales_invoice(self, arg):
+	outstanding = self.customer_balance + self.grand_total
+	if self.is_return:
 		return
 
-	frappe.call('forza.tasks.calculate_customer_credit_limit', customer_name=self.party)
-	print('-------------------Ciao-----------')
+	customer = frappe.get_doc('Customer', self.customer)
+	credit_limit_settings = frappe.get_doc('Credit Limit Settings')
+	query_results = []
+	reversed_rate = credit_limit_settings.values[::-1]
+	for rata in reversed_rate:
+		if outstanding >= rata.max_credit:
+			query_results.append(rata)
+	customer.expected_payment = (query_results[0].weekly_payment / 7) * customer.payment_frequency
+	customer.save()
+	frappe.db.commit()
+
+
+def before_submit_payment_entry(self, arg):
+	if self.party_type != 'Customer':
+		return
+	credit_limit_settings = frappe.get_doc('Credit Limit Settings')
+	frappe.call('forza.tasks.calculate_customer_credit_limit', customer_name=self.party, credit_limit_settings=credit_limit_settings)
