@@ -3,6 +3,9 @@ from frappe import _, msgprint, qb
 
 
 def validate_customer(self, arg):
+	if self.is_internal_customer:
+		return
+
 	if not self.sales_team:
 		frappe.throw('Sales Team require to have at least one member, please add one then save.')
 
@@ -20,6 +23,8 @@ def validate_sales_order(self, arg):
 
 
 def before_insert_sales_order(self, arg):
+	if self.is_internal_customer:
+		return
 	sales_team = frappe.db.sql(f'''
 	select sales_person, allocated_percentage
 	from `tabSales Team`
@@ -51,6 +56,10 @@ def on_submit_sales_order(self, arg):
 	if customer.credit_limit >= customer_outstanding:
 		return
 
+	# do not block for credit limit cross for internal customer
+	if self.is_internal_customer:
+		return
+
 	message = _("Credit limit has been crossed for customer {0} by ({1}/{2})").format(
 		self.customer, customer_outstanding, customer.credit_limit
 	)
@@ -72,6 +81,9 @@ def on_submit_sales_order(self, arg):
 
 
 def before_insert_delivery_note(self, arg):
+	if self.is_internal_customer:
+		return
+
 	if self.is_return:
 		self.naming_series = 'DN-RET-.YYYY.-'
 
@@ -87,6 +99,9 @@ def before_insert_delivery_note(self, arg):
 
 
 def before_insert_sales_invoice(self, arg):
+	if self.is_internal_customer:
+		return
+
 	if self.is_return:
 		self.naming_series = 'SINV-RET-.YYYY.-'
 		self.update_billed_amount_in_sales_order = True
@@ -115,6 +130,9 @@ def validate_sales_invoice(self, arg):
 
 
 def on_submit_sales_invoice(self, arg):
+	if self.is_internal_customer:
+		return
+
 	outstanding = self.customer_balance + self.grand_total
 	if self.is_return:
 		return
