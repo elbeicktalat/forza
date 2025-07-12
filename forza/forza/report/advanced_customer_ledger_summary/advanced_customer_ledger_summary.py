@@ -333,7 +333,7 @@ order by gle.posting_date
 	def prepare_conditions(self):
 		conditions = [""]
 
-		if self.filters.company:
+		if self.filters.company and not self.filters.ignore_company:
 			conditions.append("gle.company=%(company)s")
 
 		if self.filters.finance_book:

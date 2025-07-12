@@ -81,6 +81,12 @@ frappe.query_reports["Advanced Customer Ledger Summary"] = {
 			options: "Sales Person",
 		},
 		{
+			fieldname: "ignore_company",
+			label: __("Ignore Company"),
+			fieldtype: "Check",
+			default: "1",
+		},
+		{
 			fieldname: "tax_id",
 			label: __("Tax Id"),
 			fieldtype: "Data",
